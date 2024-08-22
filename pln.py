@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.model_selection import cross_val_score
 import nltk
 from nltk.corpus import stopwords
 import re
@@ -54,3 +55,20 @@ print(classification_report(y_test, y_pred))
 
 # Matriz de confusão
 print(confusion_matrix(y_test, y_pred))
+
+# Selecionando aleatoriamente 10 frases do conjunto de teste
+sampled_df = test_df.sample(n=10, random_state=42)
+
+# Prevê os resultados para essas frases
+sampled_df['predicted_polarity'] = model.predict(X_test[sampled_df.index])
+
+# Selecionando as colunas desejadas para o CSV
+result_df = sampled_df[['text', 'polarity', 'predicted_polarity']]
+
+# Salvando os resultados
+result_df.to_csv('resultados.csv', index=False)
+
+print("Arquivo 'resultados.csv' criado com 10 amostras de frases do conjunto de teste.")
+
+scores = cross_val_score(model, X_train, y_train, cv=5)  # fazendo 5-fold cross validation
+print("Cross-validation scores:", scores)
