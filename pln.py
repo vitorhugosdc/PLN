@@ -56,19 +56,25 @@ print(classification_report(y_test, y_pred))
 # Matriz de confusão
 print(confusion_matrix(y_test, y_pred))
 
-# Selecionando aleatoriamente 10 frases do conjunto de teste
-sampled_df = test_df.sample(n=10, random_state=42)
+# Selecionando 5 previsões positivas e 5 negativas
+positives = test_df[(y_pred == 2)].sample(n=5, random_state=42)
+negatives = test_df[(y_pred == 1)].sample(n=5, random_state=42)
 
-# Prevê os resultados para essas frases
-sampled_df['predicted_polarity'] = model.predict(X_test[sampled_df.index])
+# Adicionando as previsões
+positives['predicted_polarity'] = 2
+negatives['predicted_polarity'] = 1
+
+# Concatenando os resultados
+final_sample_df = pd.concat([positives, negatives])
 
 # Selecionando as colunas desejadas para o CSV
-result_df = sampled_df[['text', 'polarity', 'predicted_polarity']]
+final_result_df = final_sample_df[['text', 'polarity', 'predicted_polarity']]
 
 # Salvando os resultados
-result_df.to_csv('resultados.csv', index=False)
+final_result_df.to_csv('resultados_balanceados.csv', index=False)
 
-print("Arquivo 'resultados.csv' criado com 10 amostras de frases do conjunto de teste.")
+print("Arquivo 'resultados.csv' criado com 5 amostras de previsoes positivas e 5 negativas.")
 
+# Cross-validation scores
 scores = cross_val_score(model, X_train, y_train, cv=5)  # fazendo 5-fold cross validation
 print("Cross-validation scores:", scores)
