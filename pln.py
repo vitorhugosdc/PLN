@@ -10,10 +10,10 @@ from nltk.corpus import stopwords
 import re
 
 # Carregar o conjunto de treinamento
-train_df = pd.read_csv('./data/amazon_review_polarity_csv/train.csv', header=None, names=['polarity', 'title', 'text'])
+train_df = pd.read_csv('./train.csv', header=None, names=['polarity', 'title', 'text'])
 
 # Carregar o conjunto de teste
-test_df = pd.read_csv('./data/amazon_review_polarity_csv/test.csv', header=None, names=['polarity', 'title', 'text'])
+test_df = pd.read_csv('./test.csv', header=None, names=['polarity', 'title', 'text'])
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
